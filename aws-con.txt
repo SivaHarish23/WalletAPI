@@ -1,0 +1,14 @@
+https://jonathans199.medium.com/how-to-deploy-node-express-api-to-ec2-instance-in-aws-bc038a401156
+
+https://www.youtube.com/watch?v=T-Pum2TraX4
+
+chmod 400 node-express-ec2.pem
+
+ssh -i "node-express-ec2.pem" ubuntu@ec2-43-206-105-117.ap-northeast-1.compute.amazonaws.com
+
+cd
+
+pm2 start 'YOUR FOLDER'/index.js
+
+pm2 stop 'YOUR FOLDER'/index.js
+
