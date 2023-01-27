@@ -35,7 +35,7 @@ app.get("/students", (req, res) => {
 
 //GET by id
 app.get("/students/:rollno", (req, res) => {
-    client.query(`Select * from wallet where rollno=${req.params.rollno}`, (err, result) => {
+    client.query(`Select * from wallet where rollno='${req.params.rollno}'`, (err, result) => {
         if (!err) {
             res.send(result.rows);
         }
