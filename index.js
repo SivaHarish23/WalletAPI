@@ -68,7 +68,7 @@ app.put('/balance', (req, res) => {
     let ba = user.balance;
     client.query(`Select * from wallet where rollno='${user.rollno}'`, (err, result) => {
         eba = result.rows[0].balance;
-        eba = ba + eba;
+        eba = Number(ba) + Number(eba);
         // console.log(eba);
 
         let updateQuery = `update wallet set balance = '${eba}', updated_at = current_timestamp AT TIME ZONE 'Asia/Kolkata' where rollno = '${user.rollno}'`
