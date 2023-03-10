@@ -37,6 +37,7 @@ app.get("/students", (req, res) => {
 app.get("/students/:rollno", (req, res) => {
     client.query(`Select * from wallet where rollno='${req.params.rollno}'`, (err, result) => {
         if (!err) {
+
             res.send(result.rows);
         }
     });
@@ -60,18 +61,28 @@ app.post('/addStudents', (req, res) => {
     client.end;
 })
 
-
+var eba = 0;
 //PUT
 app.put('/balance', (req, res) => {
     let user = req.body;
-    //UPDATE public.wallet SET balance=100 WHERE rollno = '20EE702';
-    let updateQuery = `update wallet set balance = '${user.balance}' where rollno = '${user.rollno}'`
+    let ba = user.balance;
+    client.query(`Select * from wallet where rollno='${user.rollno}'`, (err, result) => {
+        eba = result.rows[0].balance;
+        eba = ba + eba;
+        // console.log(eba);
 
-    client.query(updateQuery, (err, result) => {
-        if (!err) {
-            res.send('Balance Update was successful')
+        let updateQuery = `update wallet set balance = '${eba}', updated_at = current_timestamp AT TIME ZONE 'Asia/Kolkata' where rollno = '${user.rollno}'`
+
+        client.query(updateQuery, (err, result) => {
+            if (!err) {
+                res.send('Balance Update was successful')
+            }
+            else { console.log(err.message) }
+        })
+        if (err) {
+            res.send('Error in getting Balance');
         }
-        else { console.log(err.message) }
-    })
+    });
+    //UPDATE public.wallet SET balance=100 WHERE rollno = '20EE702';
     client.end;
 })
