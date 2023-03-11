@@ -68,10 +68,13 @@ app.put('/balance', (req, res) => {
     let ba = user.balance;
     client.query(`Select * from wallet where rollno='${user.rollno}'`, (err, result) => {
         eba = result.rows[0].balance;
-        eba = Number(ba) + Number(eba);
+        eba = Number(eba) - Number(ba);
         // console.log(eba);
-
-        let updateQuery = `update wallet set balance = '${eba}', updated_at = current_timestamp AT TIME ZONE 'Asia/Kolkata' where rollno = '${user.rollno}'`
+        if(Number(eba)<0){
+            res.send('Insufficent balance')
+        }
+        else{
+            let updateQuery = `update wallet set balance = '${eba}', updated_at = current_timestamp AT TIME ZONE 'Asia/Kolkata' where rollno = '${user.rollno}'`
 
         client.query(updateQuery, (err, result) => {
             if (!err) {
@@ -82,6 +85,33 @@ app.put('/balance', (req, res) => {
         if (err) {
             res.send('Error in getting Balance');
         }
+        }
+        
+    });
+    //UPDATE public.wallet SET balance=100 WHERE rollno = '20EE702';
+    client.end;
+})
+
+
+//PUT
+app.put('/recharge', (req, res) => {
+    let user = req.body;
+    let ba = user.balance;
+    client.query(`Select * from wallet where rollno='${user.rollno}'`, (err, result) => {
+      
+    let updateQuery = `update wallet set balance = '${ba}', updated_at = current_timestamp AT TIME ZONE 'Asia/Kolkata' where rollno = '${user.rollno}'`
+
+        client.query(updateQuery, (err, result) => {
+            if (!err) {
+                res.send('Balance Update was successful')
+            }
+            else { console.log(err.message) }
+        })
+        if (err) {
+            res.send('Error in getting Balance');
+        }
+       
+        
     });
     //UPDATE public.wallet SET balance=100 WHERE rollno = '20EE702';
     client.end;
